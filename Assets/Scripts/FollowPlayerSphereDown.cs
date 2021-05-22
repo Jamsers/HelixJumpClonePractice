@@ -8,6 +8,10 @@ public class FollowPlayerSphereDown : MonoBehaviour {
     Vector3 lowestPlayerSpherePosition;
 
     void Start() {
+        ResetLowestPlayerPosition();
+    }
+
+    public void ResetLowestPlayerPosition() {
         lowestPlayerSpherePosition = playerSphereTransform.position;
     }
 

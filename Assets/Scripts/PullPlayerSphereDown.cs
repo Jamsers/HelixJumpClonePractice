@@ -49,12 +49,11 @@ public class PullPlayerSphereDown : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider other) {
-        Bounce();
+        //Bounce();
     }
 
     void Bounce() {
         if (Time.time - timeOfLastBounce > bounceTimeOut) {
-            Debug.Log("Bounce!");
             AddYForce(bounceForce);
             timeOfLastBounce = Time.time;
         }

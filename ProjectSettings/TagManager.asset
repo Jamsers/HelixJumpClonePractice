@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Next Spawn Location
+  - This Spawn Location
+  - Upper Plane Of Visibility
+  - Lower Plane Of Visibility
+  - Reset Position Trigger
   layers:
   - Default
   - TransparentFX
