@@ -873,6 +873,7 @@ MonoBehaviour:
     type: 3}
   initialObstacleSpawn: {fileID: 1808600970}
   obstacleActiveAmount: 5
+  obstacleBase: {fileID: 1735572622}
 --- !u!4 &1857687147
 Transform:
   m_ObjectHideFlags: 0

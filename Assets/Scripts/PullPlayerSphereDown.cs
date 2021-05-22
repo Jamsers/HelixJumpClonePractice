@@ -49,7 +49,7 @@ public class PullPlayerSphereDown : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider other) {
-        //Bounce();
+        Bounce();
     }
 
     void Bounce() {

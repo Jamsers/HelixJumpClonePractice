@@ -8,6 +8,7 @@ public class ObstacleManger : MonoBehaviour {
     [SerializeField] GameObject obstaclePrefab;
     [SerializeField] GameObject initialObstacleSpawn;
     [SerializeField] int obstacleActiveAmount;
+    [SerializeField] Transform obstacleBase;
 
     ObstaclePoolItem[] pool;
 
@@ -23,7 +24,7 @@ public class ObstacleManger : MonoBehaviour {
 
         pool = new ObstaclePoolItem[obstacleActiveAmount];
         for (int i = 0; i < obstacleActiveAmount; i++) {
-            pool[i] = new ObstaclePoolItem(Instantiate(obstaclePrefab));
+            pool[i] = new ObstaclePoolItem(Instantiate(obstaclePrefab, obstacleBase));
         }
 
         for (int i = 0; i < obstacleActiveAmount; i++) {
