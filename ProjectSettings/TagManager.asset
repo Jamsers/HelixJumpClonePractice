@@ -9,6 +9,7 @@ TagManager:
   - Upper Plane Of Visibility
   - Lower Plane Of Visibility
   - Reset Position Trigger
+  - Hostile Chunk
   layers:
   - Default
   - TransparentFX

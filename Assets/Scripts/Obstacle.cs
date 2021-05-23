@@ -7,49 +7,37 @@ public class Obstacle : MonoBehaviour
     [SerializeField] ObstacleOption[] obstacleOptions;
     [SerializeField] public Transform nextSpawnLocation;
 
-    public enum ObstacleType {
+    public enum ObstacleTypeEnum {
         ChunkOut
     }
 
     [System.Serializable]
     public struct ObstacleOption {
-        public ObstacleType type;
-        public GameObject obstacle;
+        public ObstacleTypeEnum type;
+        public GameObject reference;
     }
 
 
-    public void SpawnIn(ObstacleType type) {
-        ClearObstacle();
+    public void SpawnIn(ObstacleTypeEnum type) {
+        ResetObstacle();
 
-        switch (type) {
-            case ObstacleType.ChunkOut:
-                SpawnChunkOut();
-                break;
-        }
-    }
-
-    void ClearObstacle() {
-        foreach (ObstacleOption option in obstacleOptions) {
-            option.obstacle.SetActive(false);
-        }
-    }
-
-    void SpawnChunkOut() {
-        foreach (ObstacleOption option in obstacleOptions) {
-            if (option.type == ObstacleType.ChunkOut) {
-                option.obstacle.SetActive(true);
-                float rotation = Random.Range(0f, 360f);
-                option.obstacle.transform.rotation = Quaternion.Euler(new Vector3(0, rotation, 0));
+        for (int i = 0; i < obstacleOptions.Length; i++) {
+            if (obstacleOptions[i].type == type) {
+                obstacleOptions[i].reference.GetComponent<ObstacleChunkOut>().Spawn();
                 break;
             }
         }
     }
 
+    void ResetObstacle() {
+        for (int i = 0; i < obstacleOptions.Length; i++) {
+            obstacleOptions[i].reference.GetComponent<ObstacleChunkOut>().Reset();
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
-    {
-        //ClearObstacle();
-    }
+    {    }
 
     // Update is called once per frame
     void Update()

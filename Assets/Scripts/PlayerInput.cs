@@ -33,10 +33,6 @@ public class PlayerInput : MonoBehaviour
             Vector3 currentRotation = transform.rotation.eulerAngles;
             currentRotation.y = origYRotation + ((mousedDownLocation.x - Input.mousePosition.x) * rotateMultiplier);
             transform.rotation = Quaternion.Euler(currentRotation);
-            Debug.Log(-(mousedDownLocation.x - Input.mousePosition.x));
-        }
-        else {
-            Debug.Log(0);
         }
 
         

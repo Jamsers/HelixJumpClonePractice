@@ -49,6 +49,9 @@ public class PullPlayerSphereDown : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider other) {
+        if (other.tag == "Hostile Chunk") {
+            Debug.Log("died");
+        }
         Bounce();
     }
 

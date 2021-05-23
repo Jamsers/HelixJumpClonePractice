@@ -37,9 +37,6 @@ public class ObstacleManger : MonoBehaviour {
     }
 
     void ResetPosition () {
-        if (shouldResetPosition == false)
-            return;
-
         float yReset = playerStartPosition.y - GameObject.FindGameObjectWithTag("Player").gameObject.transform.position.y;
 
         Vector3 playerCurrentPosition = GameObject.FindGameObjectWithTag("Player").gameObject.transform.position;
@@ -56,8 +53,6 @@ public class ObstacleManger : MonoBehaviour {
             itemCurrentPosition.y += yReset;
             item.obstacle.gameObject.transform.position = itemCurrentPosition;
         }
-
-        shouldResetPosition = false;
     }
 
     public void SpawnInNextSlot(Transform callerTransform) {
@@ -84,7 +79,10 @@ public class ObstacleManger : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        ResetPosition();
+        if (shouldResetPosition == true) {
+            ResetPosition();
+            shouldResetPosition = false;
+        }
     }
 }
 
@@ -97,7 +95,7 @@ class ObstaclePoolItem {
     }
 
     public void Deploy(Vector3 location) {
-        obstacle.SpawnIn(Obstacle.ObstacleType.ChunkOut);
+        obstacle.SpawnIn(Obstacle.ObstacleTypeEnum.ChunkOut);
         obstacle.gameObject.SetActive(true);
         obstacle.transform.position = location;
     }
