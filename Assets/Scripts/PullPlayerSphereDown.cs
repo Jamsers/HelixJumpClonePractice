@@ -18,9 +18,10 @@ public class PullPlayerSphereDown : MonoBehaviour {
     }
 
     void Update() {
-        ConstantPullOfGravity();
-
-        ApplyCurrentForce();
+        if (PlayerScoreAndHealth.Instance.isAlive) {
+            ConstantPullOfGravity();
+            ApplyCurrentForce();
+        }
     }
 
     void AddYForce(float force) {
@@ -43,16 +44,21 @@ public class PullPlayerSphereDown : MonoBehaviour {
 
     void ApplyCurrentForce() {
         float forceToApply = (Time.deltaTime / second) * yForce;
-        Vector3 currentPosition = transform.position;
+        Vector3 currentPosition = transform.localPosition;
         currentPosition.y += forceToApply;
-        transform.position = currentPosition;
+        transform.localPosition = currentPosition;
     }
 
-    void OnTriggerEnter(Collider other) {
+    public void PlayerHitSomthing(Collider other) {
         if (other.tag == "Hostile Chunk") {
-            Debug.Log("died");
+            PlayerScoreAndHealth.Instance.Died();
         }
-        Bounce();
+        else if (other.tag == "This Spawn Location") {
+            PlayerScoreAndHealth.Instance.AddScore();
+        }
+        else {
+            Bounce();
+        }
     }
 
     void Bounce() {

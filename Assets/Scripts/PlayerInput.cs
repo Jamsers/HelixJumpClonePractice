@@ -8,6 +8,7 @@ public class PlayerInput : MonoBehaviour
     Vector3 mousedDownLocation = Vector3.zero;
     float origYRotation;
     [SerializeField] float rotateMultiplier;
+    [SerializeField] Transform cameraTransform;
 
     // Start is called before the first frame update
     void Start()
@@ -18,10 +19,13 @@ public class PlayerInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (PlayerScoreAndHealth.Instance.isAlive == false)
+            return;
+
         if (Input.GetMouseButtonDown(0) && isMousedDown == false) {
             isMousedDown = true;
             mousedDownLocation = Input.mousePosition;
-            origYRotation = transform.rotation.eulerAngles.y;
+            origYRotation = transform.localRotation.eulerAngles.y;
         }
 
         if (Input.GetMouseButtonUp(0)) {
@@ -30,9 +34,12 @@ public class PlayerInput : MonoBehaviour
         }
 
         if (isMousedDown) {
-            Vector3 currentRotation = transform.rotation.eulerAngles;
-            currentRotation.y = origYRotation + ((mousedDownLocation.x - Input.mousePosition.x) * rotateMultiplier);
-            transform.rotation = Quaternion.Euler(currentRotation);
+            float rawMove = mousedDownLocation.x - Input.mousePosition.x;
+            float percentMove = rawMove / Screen.width;
+            Vector3 currentRotation = transform.localRotation.eulerAngles;
+            currentRotation.y = origYRotation + (percentMove * rotateMultiplier);
+            transform.localRotation = Quaternion.Euler(currentRotation);
+            cameraTransform.localRotation = Quaternion.Euler(currentRotation);
         }
 
         

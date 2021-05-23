@@ -10,6 +10,7 @@ TagManager:
   - Lower Plane Of Visibility
   - Reset Position Trigger
   - Hostile Chunk
+  - Player Collider
   layers:
   - Default
   - TransparentFX

@@ -4,28 +4,35 @@ using UnityEngine;
 
 public class ObstacleManger : MonoBehaviour {
     static public ObstacleManger Instance;
+    static public GameObject Player;
+    static public GameObject Camera;
 
     [SerializeField] GameObject obstaclePrefab;
     [SerializeField] GameObject initialObstacleSpawn;
     [SerializeField] int obstacleActiveAmount;
     [SerializeField] Transform obstacleBase;
 
-    ObstaclePoolItem[] pool;
-
-    Transform nextSlot = null;
+    GameObject[] pool;
     int poolIndex = 0;
+    Transform nextSlot = null;
 
     Vector3 playerStartPosition;
     bool shouldResetPosition = false;
 
+    void Awake() {
+        pool = new GameObject[obstacleActiveAmount];
+        for (int i = 0; i < obstacleActiveAmount; i++) {
+            pool[i] = Instantiate(obstaclePrefab, obstacleBase);
+            pool[i].SetActive(false);
+        }
+    }
+
     void Start() {
         Instance = this;
-        playerStartPosition = GameObject.FindGameObjectWithTag("Player").gameObject.transform.position;
+        Player = GameObject.FindGameObjectWithTag("Player");
+        Camera = GameObject.FindGameObjectWithTag("MainCamera");
 
-        pool = new ObstaclePoolItem[obstacleActiveAmount];
-        for (int i = 0; i < obstacleActiveAmount; i++) {
-            pool[i] = new ObstaclePoolItem(Instantiate(obstaclePrefab, obstacleBase));
-        }
+        playerStartPosition = Player.transform.localPosition;
 
         for (int i = 0; i < obstacleActiveAmount; i++) {
             SpawnInNextSlot();
@@ -37,21 +44,21 @@ public class ObstacleManger : MonoBehaviour {
     }
 
     void ResetPosition () {
-        float yReset = playerStartPosition.y - GameObject.FindGameObjectWithTag("Player").gameObject.transform.position.y;
+        float yReset = playerStartPosition.y - Player.transform.localPosition.y;
 
-        Vector3 playerCurrentPosition = GameObject.FindGameObjectWithTag("Player").gameObject.transform.position;
+        Vector3 playerCurrentPosition = Player.transform.localPosition;
         playerCurrentPosition.y += yReset;
-        GameObject.FindGameObjectWithTag("Player").gameObject.transform.position = playerCurrentPosition;
+        Player.transform.localPosition = playerCurrentPosition;
 
-        Vector3 cameraCurrentPosition = GameObject.FindGameObjectWithTag("MainCamera").gameObject.transform.position;
+        Vector3 cameraCurrentPosition = Camera.gameObject.transform.localPosition;
         cameraCurrentPosition.y += yReset;
-        GameObject.FindGameObjectWithTag("MainCamera").gameObject.transform.position = cameraCurrentPosition;
-        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<FollowPlayerSphereDown>().ResetLowestPlayerPosition();
+        Camera.transform.localPosition = cameraCurrentPosition;
+        Camera.GetComponent<FollowPlayerSphereDown>().ResetLowestPlayerPosition();
 
-        foreach (ObstaclePoolItem item in pool) {
-            Vector3 itemCurrentPosition = item.obstacle.gameObject.transform.position;
+        foreach (GameObject item in pool) {
+            Vector3 itemCurrentPosition = item.transform.localPosition;
             itemCurrentPosition.y += yReset;
-            item.obstacle.gameObject.transform.position = itemCurrentPosition;
+            item.transform.localPosition = itemCurrentPosition;
         }
     }
 
@@ -67,8 +74,18 @@ public class ObstacleManger : MonoBehaviour {
             nextSlot = initialObstacleSpawn.transform;
         }
 
-        pool[poolIndex].Deploy(nextSlot.position);
-        nextSlot = pool[poolIndex].obstacle.nextSpawnLocation;
+        Obstacle.Type typeToSpawn = Obstacle.Type.ChunkOut;
+
+        switch (Random.Range(0, 0)) {
+            case 0:
+                typeToSpawn = Obstacle.Type.ChunkOut;
+                break;
+        }
+
+        pool[poolIndex].GetComponent<ObstacleBase>().SpawnIn(typeToSpawn);
+        pool[poolIndex].SetActive(true);
+        pool[poolIndex].transform.position = nextSlot.position;
+        nextSlot = pool[poolIndex].GetComponent<ObstacleBase>().nextSpawnSlot;
 
         int nextIndex = poolIndex + 1;
         if (nextIndex >= obstacleActiveAmount)
@@ -83,20 +100,5 @@ public class ObstacleManger : MonoBehaviour {
             ResetPosition();
             shouldResetPosition = false;
         }
-    }
-}
-
-class ObstaclePoolItem {
-    public Obstacle obstacle;
-
-    public ObstaclePoolItem(GameObject obstaclePrefab) {
-        obstacle = obstaclePrefab.GetComponent<Obstacle>();
-        obstacle.gameObject.SetActive(false);
-    }
-
-    public void Deploy(Vector3 location) {
-        obstacle.SpawnIn(Obstacle.ObstacleTypeEnum.ChunkOut);
-        obstacle.gameObject.SetActive(true);
-        obstacle.transform.position = location;
     }
 }

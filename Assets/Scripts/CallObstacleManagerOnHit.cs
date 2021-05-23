@@ -17,13 +17,15 @@ public class CallObstacleManagerOnHit : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other) {
-    if (other.tag == "Lower Plane Of Visibility" && gameObject.tag == "Next Spawn Location") {
+        if (other.tag == "Lower Plane Of Visibility" && gameObject.tag == "Next Spawn Location") {
             SlotFillIn();
         }
-    else if (other.tag == "Lower Plane Of Visibility" && gameObject.tag == "Reset Position Trigger") {
+        else if (other.tag == "Lower Plane Of Visibility" && gameObject.tag == "Reset Position Trigger") {
             ObstacleManger.Instance.QueueResetPosition();
         }
     }
+    
+
 
     public void SlotFillIn() {
         ObstacleManger.Instance.SpawnInNextSlot(transform);
